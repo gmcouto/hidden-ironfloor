@@ -160,6 +160,18 @@ here because this branch is the product, not a patch to feed upstream.)
    (`rs.couto.info` placeholder), URL scheme `ironfloor://` opens the app,
    launchd labels under `info.couto.ironfloor`.
 
+## 3.5 Server compatibility
+
+- **Self-hosted RustDesk OSS servers (hbbs/hbbr): compatible.** The wire protocol
+  (protobuf messages, key exchange, ports 21115-21119) is not modified by this
+  rebrand. Server address and key are client settings the admin configures as with
+  any RustDesk client. IronFloor and RustDesk clients can share one OSS server.
+- **RustDesk public infrastructure: deliberately broken.** Replacing `RS_PUB_KEY`
+  and `RENDEZVOUS_SERVERS` means IronFloor cannot use rs-ny.rustdesk.com. The
+  exchange fails closed on key mismatch. This is intended: no IronFloor client
+  should reach RustDesk's network, and the key blob is itself a known
+  fingerprint of RustDesk clients.
+
 ## 4. Allowed remaining occurrences (documented carve-outs)
 
 These contain "rustdesk" but never reach shipped artifacts:
