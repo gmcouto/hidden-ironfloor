@@ -4,16 +4,16 @@ import 'dart:convert';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hbb/common/shared_state.dart';
-import 'package:flutter_hbb/common/widgets/setting_widgets.dart';
-import 'package:flutter_hbb/consts.dart';
-import 'package:flutter_hbb/desktop/widgets/tabbar_widget.dart';
-import 'package:flutter_hbb/models/peer_model.dart';
-import 'package:flutter_hbb/models/peer_tab_model.dart';
-import 'package:flutter_hbb/models/state_model.dart';
+import 'package:ironfloor/common/shared_state.dart';
+import 'package:ironfloor/common/widgets/setting_widgets.dart';
+import 'package:ironfloor/consts.dart';
+import 'package:ironfloor/desktop/widgets/tabbar_widget.dart';
+import 'package:ironfloor/models/peer_model.dart';
+import 'package:ironfloor/models/peer_tab_model.dart';
+import 'package:ironfloor/models/state_model.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:flutter_hbb/utils/http_service.dart' as http;
+import 'package:ironfloor/utils/http_service.dart' as http;
 
 import '../../common.dart';
 import '../../models/model.dart';
@@ -1086,7 +1086,7 @@ _connectDialog(
       }
       return Column(
         children: [
-          descWidget(translate('verify_rustdesk_password_tip')),
+          descWidget(translate('verify_ironfloor_password_tip')),
           PasswordWidget(
             controller: passwordController,
             autoFocus: osUsernameController == null,

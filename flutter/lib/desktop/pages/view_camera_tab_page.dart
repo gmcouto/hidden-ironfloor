@@ -4,19 +4,19 @@ import 'dart:ui' as ui;
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hbb/common.dart';
-import 'package:flutter_hbb/common/shared_state.dart';
-import 'package:flutter_hbb/common/widgets/dialog.dart';
-import 'package:flutter_hbb/consts.dart';
-import 'package:flutter_hbb/models/input_model.dart';
-import 'package:flutter_hbb/models/state_model.dart';
-import 'package:flutter_hbb/desktop/pages/view_camera_page.dart';
-import 'package:flutter_hbb/desktop/widgets/remote_toolbar.dart';
-import 'package:flutter_hbb/desktop/widgets/tabbar_widget.dart';
-import 'package:flutter_hbb/desktop/widgets/material_mod_popup_menu.dart'
+import 'package:ironfloor/common.dart';
+import 'package:ironfloor/common/shared_state.dart';
+import 'package:ironfloor/common/widgets/dialog.dart';
+import 'package:ironfloor/consts.dart';
+import 'package:ironfloor/models/input_model.dart';
+import 'package:ironfloor/models/state_model.dart';
+import 'package:ironfloor/desktop/pages/view_camera_page.dart';
+import 'package:ironfloor/desktop/widgets/remote_toolbar.dart';
+import 'package:ironfloor/desktop/widgets/tabbar_widget.dart';
+import 'package:ironfloor/desktop/widgets/material_mod_popup_menu.dart'
     as mod_menu;
-import 'package:flutter_hbb/desktop/widgets/popup_menu.dart';
-import 'package:flutter_hbb/utils/multi_window_manager.dart';
+import 'package:ironfloor/desktop/widgets/popup_menu.dart';
+import 'package:ironfloor/utils/multi_window_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -107,7 +107,7 @@ class _ViewCameraTabPageState extends State<ViewCameraTabPage> {
       _update_remote_count();
     }
     tabController.onRemoved = (_, id) => onRemoveId(id);
-    rustDeskWinManager.setMethodHandler(_remoteMethodHandler);
+    ironFloorWinManager.setMethodHandler(_remoteMethodHandler);
   }
 
   @override

@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hbb/common/formatter/id_formatter.dart';
+import 'package:ironfloor/common/formatter/id_formatter.dart';
 import '../../../models/platform_model.dart';
-import 'package:flutter_hbb/models/peer_model.dart';
-import 'package:flutter_hbb/common.dart';
-import 'package:flutter_hbb/common/widgets/peer_card.dart';
+import 'package:ironfloor/models/peer_model.dart';
+import 'package:ironfloor/common.dart';
+import 'package:ironfloor/common/widgets/peer_card.dart';
 
 @visibleForTesting
 List<Peer> mergeAutocompletePeers({

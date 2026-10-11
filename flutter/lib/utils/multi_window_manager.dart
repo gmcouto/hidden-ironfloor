@@ -4,10 +4,10 @@ import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hbb/consts.dart';
-import 'package:flutter_hbb/common.dart';
-import 'package:flutter_hbb/main.dart';
-import 'package:flutter_hbb/models/input_model.dart';
+import 'package:ironfloor/consts.dart';
+import 'package:ironfloor/common.dart';
+import 'package:ironfloor/main.dart';
+import 'package:ironfloor/models/input_model.dart';
 
 /// must keep the order
 // ignore: constant_identifier_names
@@ -52,10 +52,10 @@ class MultiWindowCallResult {
 /// Window Manager
 /// mainly use it in `Main Window`
 /// use it in sub window is not recommended
-class RustDeskMultiWindowManager {
-  RustDeskMultiWindowManager._();
+class IronFloorMultiWindowManager {
+  IronFloorMultiWindowManager._();
 
-  static final instance = RustDeskMultiWindowManager._();
+  static final instance = IronFloorMultiWindowManager._();
 
   final Set<int> _inactiveWindows = {};
   final Set<int> _activeWindows = {};
@@ -527,7 +527,7 @@ class RustDeskMultiWindowManager {
   /// [Availability]
   /// This function should only be called from main window.
   /// For other windows, please post a unregister(hide) event to main window handler:
-  /// `rustDeskWinManager.call(WindowType.Main, kWindowEventHide, {"id": windowId!});`
+  /// `ironFloorWinManager.call(WindowType.Main, kWindowEventHide, {"id": windowId!});`
   Future<void> unregisterActiveWindow(int windowId) async {
     _activeWindows.remove(windowId);
     if (windowId != kMainWindowId) {
@@ -578,4 +578,4 @@ class RustDeskMultiWindowManager {
   }
 }
 
-final rustDeskWinManager = RustDeskMultiWindowManager.instance;
+final ironFloorWinManager = IronFloorMultiWindowManager.instance;

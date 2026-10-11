@@ -3,22 +3,22 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_hbb/common.dart';
-import 'package:flutter_hbb/common/shared_state.dart';
-import 'package:flutter_hbb/common/widgets/dialog.dart';
-import 'package:flutter_hbb/common/widgets/login.dart';
-import 'package:flutter_hbb/consts.dart';
-import 'package:flutter_hbb/desktop/widgets/remote_toolbar.dart';
-import 'package:flutter_hbb/models/model.dart';
-import 'package:flutter_hbb/models/platform_model.dart';
-import 'package:flutter_hbb/utils/multi_window_manager.dart';
+import 'package:ironfloor/common.dart';
+import 'package:ironfloor/common/shared_state.dart';
+import 'package:ironfloor/common/widgets/dialog.dart';
+import 'package:ironfloor/common/widgets/login.dart';
+import 'package:ironfloor/consts.dart';
+import 'package:ironfloor/desktop/widgets/remote_toolbar.dart';
+import 'package:ironfloor/models/model.dart';
+import 'package:ironfloor/models/platform_model.dart';
+import 'package:ironfloor/utils/multi_window_manager.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 bool isEditOsPassword = false;
 const String kPeerOptionAllowWaylandKeyboard = 'allow-wayland-keyboard';
 const String kWaylandKeyboardIssueUrl =
-    'https://github.com/rustdesk/rustdesk/issues/14586';
+    'https://couto.info/docs/en/kb/wayland-keyboard';
 final Set<String> _waylandKeyboardPromptSuppressedConnectionIds = <String>{};
 
 Future<bool> openWaylandKeyboardIssueUrl() {
@@ -495,7 +495,7 @@ List<TTextMenu> toolbarControls(BuildContext context, String id, FFI ffi) {
               // Web: login is required before connection, so no need to refresh
               // Mobile: same isolate, no need to send message
               if (isDesktop) {
-                rustDeskWinManager.call(
+                ironFloorWinManager.call(
                     WindowType.Main, kWindowRefreshCurrentUser, "");
               }
             }
@@ -1244,7 +1244,7 @@ bool showVirtualDisplayMenu(FFI ffi) {
   if (!ffi.ffiModel.pi.isInstalled) {
     return false;
   }
-  if (ffi.ffiModel.pi.isRustDeskIdd || ffi.ffiModel.pi.isAmyuniIdd) {
+  if (ffi.ffiModel.pi.isIronFloorIdd || ffi.ffiModel.pi.isAmyuniIdd) {
     return true;
   }
   return false;
@@ -1257,8 +1257,8 @@ List<Widget> getVirtualDisplayMenuChildren(
   }
   final pi = ffi.ffiModel.pi;
   final privacyModeState = PrivacyModeState.find(id);
-  if (pi.isRustDeskIdd) {
-    final virtualDisplays = ffi.ffiModel.pi.RustDeskVirtualDisplays;
+  if (pi.isIronFloorIdd) {
+    final virtualDisplays = ffi.ffiModel.pi.IronFloorVirtualDisplays;
     final children = <Widget>[];
     for (var i = 0; i < kMaxVirtualDisplayCount; i++) {
       children.add(Obx(() => CkbMenuButton(

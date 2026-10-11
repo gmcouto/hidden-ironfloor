@@ -11,12 +11,12 @@ import 'dart:ui' as ui;
 import 'dart:ui_web' as ui_web;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_hbb/common/widgets/login.dart';
-import 'package:flutter_hbb/models/state_model.dart';
-import 'package:flutter_hbb/models/web_video_frame_queue.dart';
+import 'package:ironfloor/common/widgets/login.dart';
+import 'package:ironfloor/models/state_model.dart';
+import 'package:ironfloor/models/web_video_frame_queue.dart';
 
-import 'package:flutter_hbb/web/bridge.dart';
-import 'package:flutter_hbb/common.dart';
+import 'package:ironfloor/web/bridge.dart';
+import 'package:ironfloor/common.dart';
 import 'package:uuid/uuid.dart';
 
 final List<StreamSubscription<MouseEvent>> mouseListeners = [];
@@ -42,7 +42,7 @@ typedef HandleEvent = Future<void> Function(Map<String, dynamic> evt);
 
 class PlatformFFI {
   final _eventHandlers = <String, Map<String, HandleEvent>>{};
-  final RustdeskImpl _ffiBind = RustdeskImpl();
+  final IronfloorImpl _ffiBind = IronfloorImpl();
 
   static String getByName(String name, [String arg = '']) {
     return context.callMethod('getByName', [name, arg]);
@@ -71,7 +71,7 @@ class PlatformFFI {
   static final PlatformFFI instance = PlatformFFI._();
 
   static get localeName => window.navigator.language;
-  RustdeskImpl get ffiBind => _ffiBind;
+  IronfloorImpl get ffiBind => _ffiBind;
 
   static Future<String> getVersion() async {
     throw UnimplementedError();

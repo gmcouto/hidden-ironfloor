@@ -10,24 +10,24 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_hbb/common/widgets/peers_view.dart';
-import 'package:flutter_hbb/consts.dart';
-import 'package:flutter_hbb/models/ab_model.dart';
-import 'package:flutter_hbb/models/chat_model.dart';
-import 'package:flutter_hbb/models/cm_file_model.dart';
-import 'package:flutter_hbb/models/file_model.dart';
-import 'package:flutter_hbb/models/group_model.dart';
-import 'package:flutter_hbb/models/peer_model.dart';
-import 'package:flutter_hbb/models/peer_tab_model.dart';
-import 'package:flutter_hbb/models/printer_model.dart';
-import 'package:flutter_hbb/models/server_model.dart';
-import 'package:flutter_hbb/models/user_model.dart';
-import 'package:flutter_hbb/models/state_model.dart';
-import 'package:flutter_hbb/models/desktop_render_texture.dart';
-import 'package:flutter_hbb/models/terminal_model.dart';
-import 'package:flutter_hbb/common/shared_state.dart';
-import 'package:flutter_hbb/utils/multi_window_manager.dart';
-import 'package:flutter_hbb/utils/http_service.dart' as http;
+import 'package:ironfloor/common/widgets/peers_view.dart';
+import 'package:ironfloor/consts.dart';
+import 'package:ironfloor/models/ab_model.dart';
+import 'package:ironfloor/models/chat_model.dart';
+import 'package:ironfloor/models/cm_file_model.dart';
+import 'package:ironfloor/models/file_model.dart';
+import 'package:ironfloor/models/group_model.dart';
+import 'package:ironfloor/models/peer_model.dart';
+import 'package:ironfloor/models/peer_tab_model.dart';
+import 'package:ironfloor/models/printer_model.dart';
+import 'package:ironfloor/models/server_model.dart';
+import 'package:ironfloor/models/user_model.dart';
+import 'package:ironfloor/models/state_model.dart';
+import 'package:ironfloor/models/desktop_render_texture.dart';
+import 'package:ironfloor/models/terminal_model.dart';
+import 'package:ironfloor/common/shared_state.dart';
+import 'package:ironfloor/utils/multi_window_manager.dart';
+import 'package:ironfloor/utils/http_service.dart' as http;
 import 'package:tuple/tuple.dart';
 import 'package:image/image.dart' as img2;
 import 'package:flutter_svg/flutter_svg.dart';
@@ -42,12 +42,12 @@ import '../utils/image.dart' as img;
 import '../common/widgets/dialog.dart';
 import 'input_model.dart';
 import 'platform_model.dart';
-import 'package:flutter_hbb/utils/scale.dart';
+import 'package:ironfloor/utils/scale.dart';
 
-import 'package:flutter_hbb/generated_bridge.dart'
-    if (dart.library.html) 'package:flutter_hbb/web/bridge.dart';
-import 'package:flutter_hbb/native/custom_cursor.dart'
-    if (dart.library.html) 'package:flutter_hbb/web/custom_cursor.dart';
+import 'package:ironfloor/generated_bridge.dart'
+    if (dart.library.html) 'package:ironfloor/web/bridge.dart';
+import 'package:ironfloor/native/custom_cursor.dart'
+    if (dart.library.html) 'package:ironfloor/web/custom_cursor.dart';
 
 typedef HandleMsgBox = Function(Map<String, dynamic> evt, String id);
 typedef ReconnectHandle = Function(OverlayDialogManager, SessionID, bool);
@@ -746,7 +746,7 @@ class FfiModel with ChangeNotifier {
       case kUrlActionClose:
         debugPrint("closing all instances");
         Future.microtask(() async {
-          await rustDeskWinManager.closeAllSubWindows();
+          await ironFloorWinManager.closeAllSubWindows();
           windowManager.close();
         });
         break;
@@ -1723,7 +1723,7 @@ class FfiModel with ChangeNotifier {
     }
 
     if (updateData.isEmpty) {
-      _pi.platformAdditions.remove(kPlatformAdditionsRustDeskVirtualDisplays);
+      _pi.platformAdditions.remove(kPlatformAdditionsIronFloorVirtualDisplays);
       _pi.platformAdditions.remove(kPlatformAdditionsAmyuniVirtualDisplays);
     } else {
       try {
@@ -1732,9 +1732,9 @@ class FfiModel with ChangeNotifier {
           _pi.platformAdditions[key] = updateJson[key];
         }
         if (!updateJson
-            .containsKey(kPlatformAdditionsRustDeskVirtualDisplays)) {
+            .containsKey(kPlatformAdditionsIronFloorVirtualDisplays)) {
           _pi.platformAdditions
-              .remove(kPlatformAdditionsRustDeskVirtualDisplays);
+              .remove(kPlatformAdditionsIronFloorVirtualDisplays);
         }
         if (!updateJson.containsKey(kPlatformAdditionsAmyuniVirtualDisplays)) {
           _pi.platformAdditions.remove(kPlatformAdditionsAmyuniVirtualDisplays);
@@ -2664,7 +2664,7 @@ class CanvasModel with ChangeNotifier {
       bumpAmount.y += bumpAmount.y.sign * 0.5;
 
       var bumpMouseSucceeded = _bumpMouseIsWorking &&
-          (await rustDeskWinManager.call(WindowType.Main, kWindowBumpMouse,
+          (await ironFloorWinManager.call(WindowType.Main, kWindowBumpMouse,
                   {"dx": bumpAmount.x.round(), "dy": bumpAmount.y.round()}))
               .result;
 
@@ -3642,7 +3642,7 @@ class CursorModel with ChangeNotifier {
   // delete leaks its handle until the process exits, and making the cursor again for a raster
   // or a shape shown once more leaks another, so an LRU would leak more than keeping them.
   //
-  // Fixing the engine is not cheap. x64 runs our fork, rustdesk/engine, on Flutter 3.24; the
+  // Fixing the engine is not cheap. x64 runs our engine fork on Flutter 3.24; the
   // fix is one more patch to rebuild, publish, and carry across every Flutter upgrade. arm64
   // runs the stock engine of a newer Flutter, which has the same code: fixing it means
   // porting the fork to that version and building and publishing an arm64 engine as well, or
@@ -4521,8 +4521,8 @@ class PeerInfo with ChangeNotifier {
   bool get isInstalled =>
       platform != kPeerPlatformWindows ||
       platformAdditions[kPlatformAdditionsIsInstalled] == true;
-  List<int> get RustDeskVirtualDisplays => List<int>.from(
-      platformAdditions[kPlatformAdditionsRustDeskVirtualDisplays] ?? []);
+  List<int> get IronFloorVirtualDisplays => List<int>.from(
+      platformAdditions[kPlatformAdditionsIronFloorVirtualDisplays] ?? []);
   int get amyuniVirtualDisplayCount =>
       platformAdditions[kPlatformAdditionsAmyuniVirtualDisplays] ?? 0;
 
@@ -4532,8 +4532,8 @@ class PeerInfo with ChangeNotifier {
 
   bool get cursorEmbedded => tryGetDisplay()?.cursorEmbedded ?? false;
 
-  bool get isRustDeskIdd =>
-      platformAdditions[kPlatformAdditionsIddImpl] == 'rustdesk_idd';
+  bool get isIronFloorIdd =>
+      platformAdditions[kPlatformAdditionsIddImpl] == 'ironfloor_idd';
   bool get isAmyuniIdd =>
       platformAdditions[kPlatformAdditionsIddImpl] == 'amyuni_idd';
 

@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:html' as html;
 
-import 'package:flutter_hbb/consts.dart';
+import 'package:ironfloor/consts.dart';
 
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
@@ -91,7 +91,7 @@ class CursorShape {
   });
 }
 
-class RustdeskImpl {
+class IronfloorImpl {
   // The core answers through the callback, before callMethod returns.
   Future<CursorShape?> sessionGetCursorShape(
       {required UuidValue sessionId, required String id, dynamic hint}) {
@@ -1673,8 +1673,8 @@ class RustdeskImpl {
   }
 
   bool isCustomClient({dynamic hint}) {
-    // is_custom_client() checks if app name is not "RustDesk"
-    return mainGetAppNameSync(hint: hint) != "RustDesk";
+    // is_custom_client() checks if app name is not "IronFloor"
+    return mainGetAppNameSync(hint: hint) != "IronFloor";
   }
 
   bool isDisableSettings({dynamic hint}) {

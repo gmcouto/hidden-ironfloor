@@ -2,15 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hbb/common.dart';
-import 'package:flutter_hbb/consts.dart';
-import 'package:flutter_hbb/main.dart';
+import 'package:ironfloor/common.dart';
+import 'package:ironfloor/consts.dart';
+import 'package:ironfloor/main.dart';
 import 'package:xterm/xterm.dart';
 
 import 'input_modifier_utils.dart';
 import 'model.dart';
 import 'platform_model.dart';
-import 'rustdesk_terminal.dart';
+import 'ironfloor_terminal.dart';
 import 'terminal_copy_shortcut.dart';
 import 'terminal_mouse_handler.dart';
 
@@ -163,7 +163,7 @@ class TerminalModel with ChangeNotifier {
   }
 
   TerminalModel(this.parent, [this.terminalId = 0]) : id = parent.id {
-    terminal = RustDeskTerminal(
+    terminal = IronFloorTerminal(
       maxLines: 10000,
       onClipboardWrite: writeTerminalClipboard,
       clipboardWritePermission: () => terminalClipboardWritePermission(

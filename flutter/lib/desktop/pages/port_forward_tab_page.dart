@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hbb/common.dart';
-import 'package:flutter_hbb/consts.dart';
-import 'package:flutter_hbb/models/state_model.dart';
-import 'package:flutter_hbb/desktop/pages/port_forward_page.dart';
-import 'package:flutter_hbb/desktop/widgets/tabbar_widget.dart';
-import 'package:flutter_hbb/utils/multi_window_manager.dart';
+import 'package:ironfloor/common.dart';
+import 'package:ironfloor/consts.dart';
+import 'package:ironfloor/models/state_model.dart';
+import 'package:ironfloor/desktop/pages/port_forward_page.dart';
+import 'package:ironfloor/desktop/widgets/tabbar_widget.dart';
+import 'package:ironfloor/utils/multi_window_manager.dart';
 import 'package:get/get.dart';
 
 class PortForwardTabPage extends StatefulWidget {
@@ -56,7 +56,7 @@ class _PortForwardTabPageState extends State<PortForwardTabPage> {
   void initState() {
     super.initState();
 
-    rustDeskWinManager.setMethodHandler((call, fromWindowId) async {
+    ironFloorWinManager.setMethodHandler((call, fromWindowId) async {
       debugPrint(
           "[Port Forward] call ${call.method} with args ${call.arguments} from window $fromWindowId");
       // for simplify, just replace connectionId
