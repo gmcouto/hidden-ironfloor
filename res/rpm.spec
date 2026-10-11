@@ -1,10 +1,10 @@
-Name:       rustdesk
+Name:       ironfloor
 Version:    1.5.0
 Release:    0
 Summary:    RPM package
 License:    GPL-3.0
-URL:        https://rustdesk.com
-Vendor:     rustdesk <info@rustdesk.com>
+URL:        https://couto.info
+Vendor:     IronFloor <info@couto.info>
 Requires:   gtk3 libxcb libXfixes alsa-lib libva2 gstreamer1-plugins-base
 Recommends: libayatana-appindicator-gtk3 libxdo
 
@@ -23,27 +23,27 @@ The best open-source remote desktop client software, written in Rust.
 
 %install
 mkdir -p %{buildroot}/usr/bin/
-mkdir -p %{buildroot}/usr/share/rustdesk/
-mkdir -p %{buildroot}/usr/share/rustdesk/files/
+mkdir -p %{buildroot}/usr/share/ironfloor/
+mkdir -p %{buildroot}/usr/share/ironfloor/files/
 mkdir -p %{buildroot}/usr/share/icons/hicolor/256x256/apps/
 mkdir -p %{buildroot}/usr/share/icons/hicolor/scalable/apps/
-install -m 755 $HBB/target/release/rustdesk %{buildroot}/usr/bin/rustdesk
-install $HBB/libsciter-gtk.so %{buildroot}/usr/share/rustdesk/libsciter-gtk.so
-install $HBB/res/rustdesk.service %{buildroot}/usr/share/rustdesk/files/
-install $HBB/res/128x128@2x.png %{buildroot}/usr/share/icons/hicolor/256x256/apps/rustdesk.png
-install $HBB/res/scalable.svg %{buildroot}/usr/share/icons/hicolor/scalable/apps/rustdesk.svg
-install $HBB/res/rustdesk.desktop %{buildroot}/usr/share/rustdesk/files/
-install $HBB/res/rustdesk-link.desktop %{buildroot}/usr/share/rustdesk/files/
+install -m 755 $HBB/target/release/ironfloor %{buildroot}/usr/bin/ironfloor
+install $HBB/libsciter-gtk.so %{buildroot}/usr/share/ironfloor/libsciter-gtk.so
+install $HBB/res/ironfloor.service %{buildroot}/usr/share/ironfloor/files/
+install $HBB/res/128x128@2x.png %{buildroot}/usr/share/icons/hicolor/256x256/apps/ironfloor.png
+install $HBB/res/scalable.svg %{buildroot}/usr/share/icons/hicolor/scalable/apps/ironfloor.svg
+install $HBB/res/ironfloor.desktop %{buildroot}/usr/share/ironfloor/files/
+install $HBB/res/ironfloor-link.desktop %{buildroot}/usr/share/ironfloor/files/
 
 %files
-/usr/bin/rustdesk
-/usr/share/rustdesk/libsciter-gtk.so
-/usr/share/rustdesk/files/rustdesk.service
-/usr/share/icons/hicolor/256x256/apps/rustdesk.png
-/usr/share/icons/hicolor/scalable/apps/rustdesk.svg
-/usr/share/rustdesk/files/rustdesk.desktop
-/usr/share/rustdesk/files/rustdesk-link.desktop
-/usr/share/rustdesk/files/__pycache__/*
+/usr/bin/ironfloor
+/usr/share/ironfloor/libsciter-gtk.so
+/usr/share/ironfloor/files/ironfloor.service
+/usr/share/icons/hicolor/256x256/apps/ironfloor.png
+/usr/share/icons/hicolor/scalable/apps/ironfloor.svg
+/usr/share/ironfloor/files/ironfloor.desktop
+/usr/share/ironfloor/files/ironfloor-link.desktop
+/usr/share/ironfloor/files/__pycache__/*
 
 %changelog
 # let's skip this for now
@@ -56,26 +56,26 @@ case "$1" in
   ;;
   2)
     # for upgrade
-    systemctl stop rustdesk || true
+    systemctl stop ironfloor || true
   ;;
 esac
 
 %post
-cp /usr/share/rustdesk/files/rustdesk.service /etc/systemd/system/rustdesk.service
-cp /usr/share/rustdesk/files/rustdesk.desktop /usr/share/applications/
-cp /usr/share/rustdesk/files/rustdesk-link.desktop /usr/share/applications/
+cp /usr/share/ironfloor/files/ironfloor.service /etc/systemd/system/ironfloor.service
+cp /usr/share/ironfloor/files/ironfloor.desktop /usr/share/applications/
+cp /usr/share/ironfloor/files/ironfloor-link.desktop /usr/share/applications/
 systemctl daemon-reload
-systemctl enable rustdesk
-systemctl start rustdesk
+systemctl enable ironfloor
+systemctl start ironfloor
 update-desktop-database
 
 %preun
 case "$1" in
   0)
     # for uninstall
-    systemctl stop rustdesk || true
-    systemctl disable rustdesk || true
-    rm /etc/systemd/system/rustdesk.service || true
+    systemctl stop ironfloor || true
+    systemctl disable ironfloor || true
+    rm /etc/systemd/system/ironfloor.service || true
   ;;
   1)
     # for upgrade
@@ -86,8 +86,8 @@ esac
 case "$1" in
   0)
     # for uninstall
-    rm /usr/share/applications/rustdesk.desktop || true
-    rm /usr/share/applications/rustdesk-link.desktop || true
+    rm /usr/share/applications/ironfloor.desktop || true
+    rm /usr/share/applications/ironfloor-link.desktop || true
     update-desktop-database
   ;;
   1)

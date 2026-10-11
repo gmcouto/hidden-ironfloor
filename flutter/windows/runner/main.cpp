@@ -11,10 +11,10 @@
 #include "flutter_window.h"
 #include "utils.h"
 
-typedef char** (*FUNC_RUSTDESK_CORE_MAIN)(int*);
-typedef void (*FUNC_RUSTDESK_FREE_ARGS)( char**, int);
-typedef int (*FUNC_RUSTDESK_GET_APP_NAME)(wchar_t*, int);
-typedef int (*FUNC_RUSTDESK_IS_DISABLE_INSTALLATION)();
+typedef char** (*FUNC_IRONFLOOR_CORE_MAIN)(int*);
+typedef void (*FUNC_IRONFLOOR_FREE_ARGS)( char**, int);
+typedef int (*FUNC_IRONFLOOR_GET_APP_NAME)(wchar_t*, int);
+typedef int (*FUNC_IRONFLOOR_IS_DISABLE_INSTALLATION)();
 /// Note: `--server`, `--service` are already handled in [core_main.rs].
 const std::vector<std::string> parameters_white_list = {"--install", "--cm"};
 
@@ -23,21 +23,21 @@ const wchar_t* getWindowClassName();
 int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command)
 {
-  HINSTANCE hInstance = LoadLibraryA("librustdesk.dll");
+  HINSTANCE hInstance = LoadLibraryA("libironfloor.dll");
   if (!hInstance)
   {
-    std::cout << "Failed to load librustdesk.dll." << std::endl;
+    std::cout << "Failed to load libironfloor.dll." << std::endl;
     return EXIT_FAILURE;
   }
-  FUNC_RUSTDESK_CORE_MAIN rustdesk_core_main =
-      (FUNC_RUSTDESK_CORE_MAIN)GetProcAddress(hInstance, "rustdesk_core_main_args");
-  if (!rustdesk_core_main)
+  FUNC_IRONFLOOR_CORE_MAIN ironfloor_core_main =
+      (FUNC_IRONFLOOR_CORE_MAIN)GetProcAddress(hInstance, "ironfloor_core_main_args");
+  if (!ironfloor_core_main)
   {
-    std::cout << "Failed to get rustdesk_core_main." << std::endl;
+    std::cout << "Failed to get ironfloor_core_main." << std::endl;
     return EXIT_FAILURE;
   }
-  FUNC_RUSTDESK_FREE_ARGS free_c_args =
-      (FUNC_RUSTDESK_FREE_ARGS)GetProcAddress(hInstance, "free_c_args");
+  FUNC_IRONFLOOR_FREE_ARGS free_c_args =
+      (FUNC_IRONFLOOR_FREE_ARGS)GetProcAddress(hInstance, "free_c_args");
   if (!free_c_args)
   {
     std::cout << "Failed to get free_c_args." << std::endl;
@@ -51,22 +51,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   }
 
   int args_len = 0;
-  char** c_args = rustdesk_core_main(&args_len);
+  char** c_args = ironfloor_core_main(&args_len);
   if (!c_args)
   {
     std::string args_str = "";
     for (const auto& argument : command_line_arguments) {
       args_str += (argument + " ");
     }
-    // std::cout << "RustDesk [" << args_str << "], core returns false, exiting without launching Flutter app." << std::endl;
+    // std::cout << "IronFloor [" << args_str << "], core returns false, exiting without launching Flutter app." << std::endl;
     return EXIT_SUCCESS;
   }
   std::vector<std::string> rust_args(c_args, c_args + args_len);
   free_c_args(c_args, args_len);
-  FUNC_RUSTDESK_IS_DISABLE_INSTALLATION rustdesk_is_disable_installation =
-      (FUNC_RUSTDESK_IS_DISABLE_INSTALLATION)GetProcAddress(hInstance, "rustdesk_is_disable_installation");
+  FUNC_IRONFLOOR_IS_DISABLE_INSTALLATION ironfloor_is_disable_installation =
+      (FUNC_IRONFLOOR_IS_DISABLE_INSTALLATION)GetProcAddress(hInstance, "ironfloor_is_disable_installation");
   bool is_disable_installation =
-      rustdesk_is_disable_installation && rustdesk_is_disable_installation() != 0;
+      ironfloor_is_disable_installation && ironfloor_is_disable_installation() != 0;
   const auto installParam = std::string("--install");
   // Flutter reads the original process command line, not only rust_args, so
   // remove the `--install` injected by the portable wrapper here as well. This
@@ -80,11 +80,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
         command_line_arguments.end());
   }
 
-  std::wstring app_name = L"RustDesk";
-  FUNC_RUSTDESK_GET_APP_NAME get_rustdesk_app_name = (FUNC_RUSTDESK_GET_APP_NAME)GetProcAddress(hInstance, "get_rustdesk_app_name");
-  if (get_rustdesk_app_name) {
+  std::wstring app_name = L"IronFloor";
+  FUNC_IRONFLOOR_GET_APP_NAME get_ironfloor_app_name = (FUNC_IRONFLOOR_GET_APP_NAME)GetProcAddress(hInstance, "get_ironfloor_app_name");
+  if (get_ironfloor_app_name) {
     wchar_t app_name_buffer[512] = {0};
-    if (get_rustdesk_app_name(app_name_buffer, 512) == 0) {
+    if (get_ironfloor_app_name(app_name_buffer, 512) == 0) {
       app_name = std::wstring(app_name_buffer);
     }
   }
@@ -105,7 +105,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
     if (!allow_multiple_instances) {
       if (!command_line_arguments.empty()) {
         // The process launched by the browser owns the foreground permission.
-        // Transfer it to the existing RustDesk process before dispatching the
+        // Transfer it to the existing IronFloor process before dispatching the
         // URI so that it can bring an existing session to the foreground.
         DWORD pid = 0;
         ::GetWindowThreadProcessId(hwnd, &pid);

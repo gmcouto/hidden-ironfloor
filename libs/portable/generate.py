@@ -96,7 +96,7 @@ def build_portable(output_folder: str, target: str):
         os.chdir(current_dir)
 
 # Linux: python3 generate.py -f ../ironfloor-portable-packer/test -o . -e ./test/main.py
-# Windows: python3 .\generate.py -f ..\rustdesk\flutter\build\windows\runner\Debug\ -o . -e ..\rustdesk\flutter\build\windows\runner\Debug\ironfloor.exe
+# Windows: python3 .\generate.py -f ..\ironfloor\flutter\build\windows\runner\Debug\ -o . -e ..\ironfloor\flutter\build\windows\runner\Debug\ironfloor.exe
 
 
 if __name__ == '__main__':
@@ -120,7 +120,7 @@ if __name__ == '__main__':
                       help="omit the executable from the blob, for a template whose "
                            "executable ships in the package instead")
     (options, args) = parser.parse_args()
-    folder = options.folder or './rustdesk'
+    folder = options.folder or './ironfloor'
     output_folder = os.path.abspath(options.output_folder or './')
 
     if not options.executable:
@@ -128,7 +128,7 @@ if __name__ == '__main__':
     if not options.executable.startswith(folder):
         options.executable = folder + '/' + options.executable
     # Note: the simple check `options.executable.startswith(folder)` is incorrect.
-    # `python generate.py -f rustdesk -e ironfloor.exe` or `python generate.py -f rustdesk`
+    # `python generate.py -f ironfloor -e ironfloor.exe` or `python generate.py -f ironfloor`
     # will result the print "Executable path: ..exe".
     # So we need to check if the executable is in the folder, and if so, concat again.
     if os.path.exists(os.path.join(folder, options.executable)):

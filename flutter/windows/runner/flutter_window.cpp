@@ -106,7 +106,7 @@ bool FlutterWindow::OnCreate() {
 
   flutter::MethodChannel<> channel(
     flutter_controller_->engine()->messenger(),
-    "org.rustdesk.rustdesk/host",
+    "info.couto.ironfloor/host",
     &flutter::StandardMethodCodec::GetInstance());
 
   channel.SetMethodCallHandler(
@@ -211,7 +211,7 @@ FlutterWindow::MessageHandler(HWND hwnd, UINT const message,
           // one or under a debugger (see main.cpp), and this fires on end-user
           // machines. OutputDebugString is readable with DebugView there.
           OutputDebugStringA(
-              "rustdesk: Flutter window did not render its first frame, "
+              "ironfloor: Flutter window did not render its first frame, "
               "giving up.\n");
           KillTimer(hwnd, kForceRedrawTimerId);
         } else if (force_redraw_tries_ <= kForceRedrawCheapTries) {

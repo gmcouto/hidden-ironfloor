@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=IronFloor
+NoDisplay=true
+MimeType=x-scheme-handler/ironfloor;
+TryExec=ironfloor
+Exec=ironfloor %u
+Icon=ironfloor
+Terminal=false
+Type=Application
+StartupNotify=false
+StartupWMClass=ironfloor
