@@ -51,7 +51,7 @@ pub enum GrabState {
 pub type NotifyMessageBox = fn(String, String, String, String) -> dyn Future<Output = ()>;
 
 // the executable name of the portable version
-pub const PORTABLE_APPNAME_RUNTIME_ENV_KEY: &str = "RUSTDESK_APPNAME";
+pub const PORTABLE_APPNAME_RUNTIME_ENV_KEY: &str = "IRONFLOOR_APPNAME";
 
 pub const PLATFORM_WINDOWS: &str = "Windows";
 pub const PLATFORM_LINUX: &str = "Linux";
@@ -1021,11 +1021,11 @@ pub fn check_software_update() {
 }
 
 // No need to check `danger_accept_invalid_cert` for now.
-// Because the url is always `https://api.rustdesk.com/version/latest`.
+// Because the url is always `https://api.couto.info/version/latest`.
 #[tokio::main(flavor = "current_thread")]
 pub async fn do_check_software_update() -> hbb_common::ResultType<()> {
     let (request, url) =
-        hbb_common::version_check_request(hbb_common::VER_TYPE_RUSTDESK_CLIENT.to_string());
+        hbb_common::version_check_request(hbb_common::VER_TYPE_IRONFLOOR_CLIENT.to_string());
     let proxy_conf = Config::get_socks();
     let tls_url = get_url_for_tls(&url, &proxy_conf);
     let tls_type = get_cached_tls_type(tls_url);
@@ -1077,8 +1077,8 @@ pub fn get_app_name() -> String {
 }
 
 #[inline]
-pub fn is_rustdesk() -> bool {
-    hbb_common::config::APP_NAME.read().unwrap().eq("RustDesk")
+pub fn is_ironfloor() -> bool {
+    hbb_common::config::APP_NAME.read().unwrap().eq("IronFloor")
 }
 
 #[inline]
@@ -1152,7 +1152,7 @@ fn get_api_server_(api: String, custom: String) -> String {
             return format!("http://{}", s);
         }
     }
-    "https://admin.rustdesk.com".to_owned()
+    "https://admin.couto.info".to_owned()
 }
 
 #[inline]
@@ -1165,7 +1165,7 @@ pub fn is_public(url: &str) -> bool {
         return false;
     };
     let host = host.strip_suffix('.').unwrap_or(host);
-    host == "rustdesk.com" || host.ends_with(".rustdesk.com")
+    host == "couto.info" || host.ends_with(".couto.info")
 }
 
 pub fn get_tcp_punch_enabled() -> bool {
@@ -2120,7 +2120,7 @@ pub fn check_process(arg: &str, mut same_uid: bool) -> bool {
         if same_uid && p.user_id() != my_uid {
             continue;
         }
-        // on mac, p.cmd() get "/Applications/RustDesk.app/Contents/MacOS/RustDesk", "XPC_SERVICE_NAME=com.carriez.RustDesk_server"
+        // on mac, p.cmd() get "/Applications/IronFloor.app/Contents/MacOS/IronFloor", "XPC_SERVICE_NAME=info.couto.IronFloor_server"
         let parg = if p.cmd().len() <= 1 { "" } else { &p.cmd()[1] };
         if arg.is_empty() {
             if !parg.starts_with("--") {
@@ -2343,10 +2343,10 @@ impl ThrottledInterval {
     }
 }
 
-pub type RustDeskInterval = ThrottledInterval;
+pub type IronFloorInterval = ThrottledInterval;
 
 #[inline]
-pub fn rustdesk_interval(i: Interval) -> ThrottledInterval {
+pub fn ironfloor_interval(i: Interval) -> ThrottledInterval {
     ThrottledInterval::new(i)
 }
 
@@ -2551,7 +2551,7 @@ pub fn get_builtin_option(key: &str) -> String {
 
 #[inline]
 pub fn is_custom_client() -> bool {
-    get_app_name() != "RustDesk"
+    get_app_name() != "IronFloor"
 }
 
 pub fn verify_login(_raw: &str, _id: &str) -> bool {
@@ -3036,12 +3036,12 @@ mod tests {
     // ThrottledInterval tick at the same time as tokio interval, if no sleeps
     #[allow(non_snake_case)]
     #[tokio::test]
-    async fn test_RustDesk_interval() {
+    async fn test_IronFloor_interval() {
         let base_intervals = [interval_maker, interval_at_maker];
         for maker in base_intervals.into_iter() {
             let mut tokio_timer = maker();
             let mut tokio_times = Vec::new();
-            let mut timer = rustdesk_interval(maker());
+            let mut timer = ironfloor_interval(maker());
             let mut times = Vec::new();
             loop {
                 tokio::select! {
@@ -3085,10 +3085,10 @@ mod tests {
     // ThrottledInterval tick less times than tokio interval, if there're sleeps
     #[allow(non_snake_case)]
     #[tokio::test]
-    async fn test_RustDesk_interval_sleep() {
+    async fn test_IronFloor_interval_sleep() {
         let base_intervals = [interval_maker, interval_at_maker];
         for (i, maker) in base_intervals.into_iter().enumerate() {
-            let mut timer = rustdesk_interval(maker());
+            let mut timer = ironfloor_interval(maker());
             let mut times = Vec::new();
             sleep(Duration::from_secs(3)).await;
             loop {
@@ -3146,37 +3146,37 @@ mod tests {
 
     #[test]
     fn test_is_public() {
-        // Test URLs containing "rustdesk.com/"
-        assert!(is_public("https://rustdesk.com/"));
-        assert!(is_public("https://www.rustdesk.com/"));
-        assert!(is_public("https://api.rustdesk.com/v1"));
-        assert!(is_public("https://API.RUSTDESK.COM/v1"));
-        assert!(is_public("https://rustdesk.com/path"));
+        // Test URLs containing "couto.info/"
+        assert!(is_public("https://couto.info/"));
+        assert!(is_public("https://www.couto.info/"));
+        assert!(is_public("https://api.couto.info/v1"));
+        assert!(is_public("https://API.COUTO.INFO/v1"));
+        assert!(is_public("https://couto.info/path"));
 
-        // Test URLs ending with "rustdesk.com"
-        assert!(is_public("rustdesk.com"));
-        assert!(is_public("https://rustdesk.com"));
-        assert!(is_public("https://RustDesk.com"));
-        assert!(is_public("http://www.rustdesk.com"));
-        assert!(is_public("https://api.rustdesk.com"));
+        // Test URLs ending with "couto.info"
+        assert!(is_public("couto.info"));
+        assert!(is_public("https://couto.info"));
+        assert!(is_public("https://Couto.info"));
+        assert!(is_public("http://www.couto.info"));
+        assert!(is_public("https://api.couto.info"));
 
         // Test non-public URLs
         assert!(!is_public("https://example.com"));
         assert!(!is_public("https://custom-server.com"));
         assert!(!is_public("http://192.168.1.1"));
         assert!(!is_public("localhost"));
-        assert!(!is_public("https://rustdesk.computer.com"));
-        assert!(!is_public("rustdesk.comhello.com"));
+        assert!(!is_public("https://couto.infoputer.com"));
+        assert!(!is_public("couto.infohello.com"));
     }
 
     #[test]
-    fn test_is_public_matches_rustdesk_root_domain() {
-        assert!(is_public("rustdesk.com/"));
-        assert!(is_public("rustdesk.com:21117"));
-        assert!(is_public("api.rustdesk.com:21117"));
-        assert!(!is_public("hello-rustdesk.com"));
-        assert!(!is_public("api.rustdesk.com.evil.test"));
-        assert!(!is_public("https://rustdesk.com@evil.test"));
+    fn test_is_public_matches_couto_root_domain() {
+        assert!(is_public("couto.info/"));
+        assert!(is_public("couto.info:21117"));
+        assert!(is_public("api.couto.info:21117"));
+        assert!(!is_public("hello-couto.info"));
+        assert!(!is_public("api.couto.info.evil.test"));
+        assert!(!is_public("https://couto.info@evil.test"));
     }
 
     #[test]
@@ -3194,8 +3194,8 @@ mod tests {
             "https://admin.example.com"
         ));
         assert!(!should_use_tcp_proxy_for_api_url(
-            "https://admin.rustdesk.com/api/login",
-            "https://admin.rustdesk.com"
+            "https://admin.couto.info/api/login",
+            "https://admin.couto.info"
         ));
         assert!(!should_use_tcp_proxy_for_api_url(
             "https://admin.example.com/api/login",

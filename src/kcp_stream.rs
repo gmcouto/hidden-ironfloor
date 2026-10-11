@@ -249,7 +249,7 @@ mod tests {
     // A writer that queues many frames and closes immediately must not cost the
     // reader any of them: every frame arrives intact, in order, before end-of-stream.
     // This is the client-side pin for the kcp-sys close-tail-drain semantics, through
-    // the real BytesCodec framing rustdesk sessions use.
+    // the real BytesCodec framing ironfloor sessions use.
     #[tokio::test]
     async fn test_kcp_stream_close_delivers_all_frames() {
         let ((_guard_a, mut tx), (_guard_b, mut rx)) = establish().await;

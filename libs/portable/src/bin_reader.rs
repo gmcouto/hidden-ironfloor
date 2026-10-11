@@ -16,7 +16,7 @@ const PACKAGE_RESOURCE_NAME: &str = "RDPKG";
 
 // 4bytes
 const LENGTH: usize = 4;
-const IDENTIFIER: &[u8] = b"rustdesk";
+const IDENTIFIER: &[u8] = b"ironfloor";
 const IDENTIFIER_LENGTH: usize = 8;
 const MD5_LENGTH: usize = 32;
 const BUF_SIZE: usize = 4096;
@@ -282,11 +282,11 @@ mod tests {
     #[test]
     fn parses_the_generate_py_layout() {
         let (files, exe) = parse(blob(
-            &[("./rustdesk.exe", b"app"), ("./custom.txt", b"cfg")],
-            "./rustdesk.exe",
+            &[("./ironfloor.exe", b"app"), ("./custom.txt", b"cfg")],
+            "./ironfloor.exe",
         ))
         .unwrap();
-        assert_eq!(exe, "./rustdesk.exe");
+        assert_eq!(exe, "./ironfloor.exe");
         assert_eq!(files.len(), 2);
         assert_eq!(entry(&files, "./custom.txt").unwrap().raw, b"cfg");
     }
@@ -296,7 +296,7 @@ mod tests {
         assert!(parse(b"".as_slice()).is_none());
         assert!(parse(b"notrustd".as_slice()).is_none());
         // Truncated mid-record rather than panicking on a slice out of range.
-        assert!(parse(b"rustdesk\x00\x00\x00\x40partial".as_slice()).is_none());
+        assert!(parse(b"ironfloor\x00\x00\x00\x40partial".as_slice()).is_none());
     }
 
     #[test]
@@ -308,18 +308,18 @@ mod tests {
 
     #[test]
     fn without_a_package_the_stock_payload_is_untouched() {
-        let embedded = parse(blob(&[("./rustdesk.exe", b"app")], "./rustdesk.exe")).unwrap();
+        let embedded = parse(blob(&[("./ironfloor.exe", b"app")], "./ironfloor.exe")).unwrap();
         let (files, exe) = merge(embedded, Default::default());
-        assert_eq!(exe, "./rustdesk.exe");
-        assert!(entry(&files, "./rustdesk.exe").is_some());
+        assert_eq!(exe, "./ironfloor.exe");
+        assert!(entry(&files, "./ironfloor.exe").is_some());
     }
 
     #[test]
     fn renames_the_stock_executable_to_the_package_name() {
         // x86: the big executable stays in the generic payload and only gets renamed.
         let embedded = parse(blob(
-            &[("./rustdesk.exe", b"app"), ("./sciter.dll", b"dll")],
-            "./rustdesk.exe",
+            &[("./ironfloor.exe", b"app"), ("./sciter.dll", b"dll")],
+            "./ironfloor.exe",
         ))
         .unwrap();
         let package = parse(blob(&[("./custom.txt", b"cfg")], "./acme.exe")).unwrap();
@@ -328,7 +328,7 @@ mod tests {
 
         assert_eq!(exe, "./acme.exe");
         assert!(entry(&files, "./acme.exe").is_some());
-        assert!(entry(&files, "./rustdesk.exe").is_none());
+        assert!(entry(&files, "./ironfloor.exe").is_none());
         // Untouched neighbours survive.
         assert_eq!(entry(&files, "./sciter.dll").unwrap().raw, b"dll");
         assert_eq!(entry(&files, "./custom.txt").unwrap().raw, b"cfg");
@@ -340,9 +340,9 @@ mod tests {
         let embedded = parse(blob(
             &[
                 ("./data/flutter_assets/assets/icon.ico", b"stock-icon"),
-                ("./librustdesk.dll", b"core"),
+                ("./libironfloor.dll", b"core"),
             ],
-            "./rustdesk.exe",
+            "./ironfloor.exe",
         ))
         .unwrap();
         let package = parse(blob(
@@ -370,7 +370,7 @@ mod tests {
                 .count(),
             1
         );
-        assert_eq!(entry(&files, "./librustdesk.dll").unwrap().raw, b"core");
+        assert_eq!(entry(&files, "./libironfloor.dll").unwrap().raw, b"core");
     }
 
     #[test]
@@ -385,7 +385,7 @@ mod tests {
         assert_eq!(paths, vec!["./custom.txt", "./data/logo.png"]);
 
         // Merging must not disturb them: the generic payload contributes none.
-        let embedded = parse(blob(&[("./librustdesk.dll", b"core")], "./rustdesk.exe")).unwrap();
+        let embedded = parse(blob(&[("./libironfloor.dll", b"core")], "./ironfloor.exe")).unwrap();
         let (files, _) = merge(embedded, package);
         assert!(entry(&files, "./data/logo.png").is_some());
     }
@@ -393,13 +393,13 @@ mod tests {
     #[test]
     fn matches_paths_across_separator_styles() {
         // generate.py emits backslashes when it runs on Windows.
-        let embedded = parse(blob(&[(".\\rustdesk.exe", b"app")], ".\\rustdesk.exe")).unwrap();
+        let embedded = parse(blob(&[(".\\ironfloor.exe", b"app")], ".\\ironfloor.exe")).unwrap();
         let package = parse(blob(&[("./custom.txt", b"cfg")], "./acme.exe")).unwrap();
 
         let (files, exe) = merge(embedded, package);
 
         assert_eq!(exe, "./acme.exe");
         assert!(entry(&files, "./acme.exe").is_some());
-        assert!(entry(&files, ".\\rustdesk.exe").is_none());
+        assert!(entry(&files, ".\\ironfloor.exe").is_none());
     }
 }

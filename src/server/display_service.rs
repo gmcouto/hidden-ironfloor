@@ -360,7 +360,7 @@ fn refresh_wayland_uinput_rect_if_changed() {
         (live_changed, drifted)
     };
     // Single owner of the generation bump: on the cache clear it let every session init tear
-    // down every other live capturer. Baseline promotes with the clear (rustdesk#15601).
+    // down every other live capturer. Baseline promotes with the clear (https://github.com/rustdesk/rustdesk/issues/15601).
     #[cfg(feature = "drm")]
     {
         // An edge seen while DRM is transiently non-Available stays OWED rather than consumed.
@@ -739,11 +739,11 @@ pub(super) fn get_original_resolution(
     h: usize,
 ) -> MessageField<Resolution> {
     #[cfg(windows)]
-    let is_rustdesk_virtual_display =
-        crate::virtual_display_manager::rustdesk_idd::is_virtual_display(&display_name);
+    let is_ironfloor_virtual_display =
+        crate::virtual_display_manager::ironfloor_idd::is_virtual_display(&display_name);
     #[cfg(not(windows))]
-    let is_rustdesk_virtual_display = false;
-    Some(if is_rustdesk_virtual_display {
+    let is_ironfloor_virtual_display = false;
+    Some(if is_ironfloor_virtual_display {
         Resolution {
             width: 0,
             height: 0,
@@ -1154,7 +1154,7 @@ mod wayland_layout_tests {
         }]
     }
 
-    // rustdesk#15886: a video service starts, the output rotates, and a retry starts before the
+    // https://github.com/rustdesk/rustdesk/issues/15886: a video service starts, the output rotates, and a retry starts before the
     // 1.5 s poll. The baseline is reset on both, so it cannot be the edge detector's memory.
     #[test]
     fn a_rotation_between_two_session_inits_is_still_an_edge() {
@@ -1192,7 +1192,7 @@ mod wayland_layout_tests {
         assert!(!l.edge(&upright, false, 0));
     }
 
-    // rustdesk#15886: `ensure_inited()` runs the wayland query BEFORE the capturer exists, and a
+    // https://github.com/rustdesk/rustdesk/issues/15886: `ensure_inited()` runs the wayland query BEFORE the capturer exists, and a
     // failure there saves an EMPTY baseline. The capturer's own retry can succeed a moment later
     // and build on layout A, and that build is not blind, so nothing else records it. A rotation
     // before the first poll then had no memory to be an edge against.

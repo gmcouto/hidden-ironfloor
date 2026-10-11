@@ -127,7 +127,7 @@ pub const SCRAP_OTHER_VERSION_OR_X11_REQUIRED: &str =
 pub const SCRAP_XDP_PORTAL_UNAVAILABLE: &str =
     "xdp-portal-unavailable";
 pub const SCRAP_X11_REQUIRED: &str = "x11 expected";
-pub const SCRAP_X11_REF_URL: &str = "https://rustdesk.com/docs/en/manual/linux/#x11-required";
+pub const SCRAP_X11_REF_URL: &str = "https://couto.info/docs/en/manual/linux/#x11-required";
 
 #[cfg(not(target_os = "linux"))]
 pub const AUDIO_BUFFER_MS: usize = 3000;
@@ -1155,7 +1155,7 @@ impl Client {
                             .boxed();
                             if interface.is_policy_relay() {
                                 // Relay-only WebRTC can use only TURN, so it has no P2P advantage
-                                // over the RustDesk relay. Take the first successful relay instead
+                                // over the IronFloor relay. Take the first successful relay instead
                                 // of delaying an already-ready result for the preference window.
                                 // Policy, not force_relay: under ws the offer is full ICE and a
                                 // direct path is exactly what the preference window exists for.
@@ -1533,7 +1533,7 @@ impl Client {
         // webrtc_guard stays armed across the relay override and secure_connection below; it is
         // disarmed only at the successful return when WebRTC is the kept transport.
 
-        // Keep a WebRTC win instead of replacing it with the RustDesk relay: under relay-by-
+        // Keep a WebRTC win instead of replacing it with the IronFloor relay: under relay-by-
         // policy the pc was built with Relay-only ICE (TURN configured), which already honors
         // the relay requirement, and under ws-forced relay a direct full-ICE connection is the
         // preferred outcome, not a violation.
@@ -2061,7 +2061,7 @@ impl ClientClipboardHandler {
                 if let Some(urls) = check_clipboard_files(&mut self.ctx, ClipboardSide::Client, false) {
                     if !urls.is_empty() {
                         #[cfg(target_os = "macos")]
-                        if crate::clipboard::is_file_url_set_by_rustdesk(&urls) {
+                        if crate::clipboard::is_file_url_set_by_ironfloor(&urls) {
                             return;
                         }
                         match clipboard::platform::unix::serv_files::sync_files(&urls) {
@@ -4482,7 +4482,7 @@ lazy_static::lazy_static! {
             msgtype: "error",
             title: "Login Error",
             text: "Login screen using Wayland is not supported",
-            link: "https://rustdesk.com/docs/en/manual/linux/#login-screen",
+            link: "https://couto.info/docs/en/manual/linux/#login-screen",
             try_again: true,
         }), (LOGIN_MSG_NO_PASSWORD_ACCESS, LoginErrorMsgBox{
             msgtype: "wait-remote-accept-nook",
@@ -5242,7 +5242,7 @@ async fn hc_connection_(
     mut rx: UnboundedReceiver<()>,
     token: String,
 ) -> ResultType<()> {
-    let mut timer = crate::rustdesk_interval(interval(crate::TIMER_OUT));
+    let mut timer = crate::ironfloor_interval(interval(crate::TIMER_OUT));
     let mut last_recv_msg = Instant::now();
     let mut keep_alive = crate::DEFAULT_KEEP_ALIVE;
 

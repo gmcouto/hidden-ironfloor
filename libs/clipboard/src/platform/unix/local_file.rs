@@ -469,7 +469,7 @@ mod file_list_test {
     #[test]
     fn read_exact_at_reopens_after_read_failure() -> Result<(), Box<dyn std::error::Error>> {
         let file_path = std::env::temp_dir().join(format!(
-            "rustdesk-clipboard-local-file-{}",
+            "ironfloor-clipboard-local-file-{}",
             std::process::id()
         ));
         std::fs::write(&file_path, b"")?;

@@ -175,7 +175,7 @@ impl Handler {
         if let Some(urls) = check_clipboard_files(&mut self.ctx, ClipboardSide::Host, false) {
             if !urls.is_empty() {
                 #[cfg(target_os = "macos")]
-                if crate::clipboard::is_file_url_set_by_rustdesk(&urls) {
+                if crate::clipboard::is_file_url_set_by_ironfloor(&urls) {
                     return;
                 }
                 match clipboard::platform::unix::serv_files::sync_files(&urls) {
