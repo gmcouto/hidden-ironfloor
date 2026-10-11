@@ -179,9 +179,19 @@ These contain "rustdesk" but never reach shipped artifacts:
 1. **Dependency source URLs** — `github.com/rustdesk-org/*` and `rustdesk/hbb_common`
    in `Cargo.toml`, `pubspec.yaml`, lockfiles. Renaming breaks the build; they are
    fetch-time only. (Optional hardening: mirror those repos under couto and repoint.)
+   Same class: the `ubuntu18.04-rustdesk` distro token of
+   `rustdesk-org/run-on-arch-action` (CI docker image tag, build-time only), the
+   `rustdesk/engine` windows x64 engine zip, the `usbmmidd_v2` and
+   `rustdesk_printer_driver_v4-1.4.zip` release assets downloaded and
+   checksum-verified by exact external name, `doc.rustdesk.com` web-deps release,
+   and the fdroid.yml upstream releases API query.
 2. **Upstream issue-link comments** (`// https://github.com/rustdesk/rustdesk/issues/...`)
    in code comments — traceability to upstream fixes, not compiled into binaries.
-   Kept verbatim; prose around them is swept.
+   Kept verbatim; prose around them is swept. Same class:
+   `libs/virtual_display/dylib/src/lib.rs` links `fufesou/RustDeskIddDriver`
+   (external repo), and `src/server/clipboard_service.rs` quotes a historical
+   panic backtrace comment verbatim (rewriting the quoted log line would
+   fabricate it).
 3. Git history and this plan file itself.
 
 Everything else — binaries, plists, resources, packages, UI strings — must be clean.
