@@ -1,10 +1,10 @@
 [package]
 name = "base"
 version = "0.1.0"
-authors = ["rustdesk <info@rustdesk.com>"]
+authors = ["IronFloor <info@couto.info>"]
 edition = "2018"
 
-# Code that only RustDesk itself uses. `hbb_common` stays the crate shared with
+# Code that only IronFloor itself uses. `hbb_common` stays the crate shared with
 # the server, so anything the server never touches belongs here instead.
 
 [features]
